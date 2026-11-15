@@ -1,0 +1,65 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: exchange
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 500ms
+      connect-timeout: 500ms
+  cache:
+    type: redis
+    cache-names: exchanges # registra métricas cache_gets_total (hit/miss)
+    redis:
+      enable-statistics: true
+      time-to-live: ${CACHE_TTL:60000} # cotação vale 60 s
+      cache-null-values: false
+
+store:
+  exchange:
+    provider: ${EXCHANGE_PROVIDER_URL:https://economia.awesomeapi.com.br}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      provider:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 2
+        record-exceptions:
+          - org.springframework.web.client.ResourceAccessException      # timeout / conexão
+          - org.springframework.web.client.HttpServerErrorException     # 5xx
+          - org.springframework.web.client.HttpClientErrorException$TooManyRequests
+  retry:
+    instances:
+      provider:
+        max-attempts: 3
+        wait-duration: 300ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.ResourceAccessException
+          - org.springframework.web.client.HttpServerErrorException
+        ignore-exceptions:
+          - io.github.resilience4j.circuitbreaker.CallNotPermittedException
+
+management:
+  endpoints:
+    web:
+      base-path: /exchanges/actuator
+      exposure:
+        include: [health, prometheus, circuitbreakers]
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    redis:
+      enabled: false
