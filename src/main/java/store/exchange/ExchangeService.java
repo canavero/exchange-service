@@ -23,8 +23,11 @@ public class ExchangeService {
     private final RestClient provider;
 
     @Autowired
-    public ExchangeService(@Value("${store.exchange.provider}") String url) {
-        this(RestClient.builder().baseUrl(url).requestFactory(timeouts()).build());
+    public ExchangeService(@Value("${store.exchange.provider}") String url,
+                           @Value("${store.exchange.token:}") String token) {
+        this(RestClient.builder().baseUrl(url).requestFactory(timeouts())
+            .defaultHeaders(h -> { if (!token.isBlank()) h.set("x-api-key", token); })
+            .build());
     }
 
     ExchangeService(RestClient provider) {

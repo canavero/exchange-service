@@ -21,6 +21,8 @@ spring:
 store:
   exchange:
     provider: ${EXCHANGE_PROVIDER_URL:https://economia.awesomeapi.com.br}
+    # API key da AwesomeAPI (opcional em casa; obrigatória a partir de IPs da AWS, que recebem 429)
+    token: ${EXCHANGE_PROVIDER_TOKEN:}
 
 resilience4j:
   circuitbreaker:

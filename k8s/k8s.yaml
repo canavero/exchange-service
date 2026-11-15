@@ -32,6 +32,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: exchange-configmap
+            - secretRef:
+                name: exchange-secrets # EXCHANGE_PROVIDER_TOKEN (criado pelo k8s/deploy.sh, fora do git)
+                optional: true
           resources:
             requests:
               cpu: 100m
