@@ -4,7 +4,7 @@ metadata:
   name: exchange-configmap
 data:
   REDIS_HOST: redis
-  EXCHANGE_PROVIDER_URL: https://economia.awesomeapi.com.br
+  EXCHANGE_PROVIDER_URL: https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,9 +32,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: exchange-configmap
-            - secretRef:
-                name: exchange-secrets # EXCHANGE_PROVIDER_TOKEN (criado pelo k8s/deploy.sh, fora do git)
-                optional: true
           resources:
             requests:
               cpu: 100m

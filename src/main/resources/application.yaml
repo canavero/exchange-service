@@ -20,9 +20,8 @@ spring:
 
 store:
   exchange:
-    provider: ${EXCHANGE_PROVIDER_URL:https://economia.awesomeapi.com.br}
-    # API key da AwesomeAPI (opcional em casa; obrigatória a partir de IPs da AWS, que recebem 429)
-    token: ${EXCHANGE_PROVIDER_TOKEN:}
+    # PTAX do Banco Central: pública, sem API key e responde para IPs da AWS
+    provider: ${EXCHANGE_PROVIDER_URL:https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata}
 
 resilience4j:
   circuitbreaker:

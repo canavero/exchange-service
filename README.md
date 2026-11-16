@@ -1,6 +1,6 @@
 # exchange-service
 
-Cotações de câmbio via AwesomeAPI — cache Redis, retry e circuit breaker.
+Cotações de câmbio via PTAX do Banco Central (sem API key) — cache Redis, retry e circuit breaker.
 
 Manifests Kubernetes em `k8s/k8s.yaml`; CI em `.github/workflows/ci.yml`.
 
